@@ -37,3 +37,24 @@ func (r *account) FindByUsername(ctx context.Context, username string) (*object.
 
 	return entity, nil
 }
+
+func (r *account) CreateAccount(ctx context.Context, newAccount *object.Account) (*object.Account, error) {
+	const (
+		insert = "insert into account(username, password_hash) values(?, ?)"
+		read   = "select * from account where id = ?"
+	)
+	result, err := r.db.ExecContext(ctx, insert, newAccount.Username, newAccount.PasswordHash)
+	if err != nil {
+		return nil, err
+	}
+	lastID, err := result.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	insertedAccount := new(object.Account)
+	insertedRow := r.db.QueryRowxContext(ctx, read, lastID)
+	insertedRow.StructScan(&insertedAccount)
+
+	return newAccount, nil
+}
