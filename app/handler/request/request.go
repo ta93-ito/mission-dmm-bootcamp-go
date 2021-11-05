@@ -11,7 +11,6 @@ import (
 // Read path parameter `id`
 func IDOf(r *http.Request) (int64, error) {
 	ids := chi.URLParam(r, "id")
-
 	if ids == "" {
 		return -1, errors.Errorf("id was not presence")
 	}
