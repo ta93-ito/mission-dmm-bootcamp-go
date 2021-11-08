@@ -19,6 +19,10 @@ func NewStatus(db *sqlx.DB) repository.Status {
 	return &status{db: db}
 }
 
+const (
+	insertStatus = "insert into status(content, account_id) values(?, ?)"
+)
+
 func (r *status) CreateStatus(ctx context.Context, newStatus *object.Status) (*object.Status, error) {
 	const (
 		insert = "insert into status(content, account_id) values(?, ?)"
@@ -26,6 +30,7 @@ func (r *status) CreateStatus(ctx context.Context, newStatus *object.Status) (*o
 	)
 	// content入ってない。。。
 	result, err := r.db.ExecContext(ctx, insert, newStatus.Content, newStatus.AccountID)
+	result, err := r.db.ExecContext(ctx, insertStatus, newStatus.Content, newStatus.AccountID)
 	if err != nil {
 		return nil, err
 	}
