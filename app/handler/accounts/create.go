@@ -45,39 +45,23 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	repo := h.app.Dao.Account() // domain/repository の取得
-	newAccount, err := repo.CreateAccount(ctx, account)
-	if err != nil {
-		httperror.InternalServerError(w, err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(newAccount); err != nil {
-		httperror.InternalServerError(w, err)
-		return
-	}
-}
-
-func (h *handler) Read(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-
-	username := chi.URLParam(r, "username")
-	if username == "" {
-		err := errors.New("username is required")
-		httperror.BadRequest(w, err)
-		return
-	}
-	req := ReadRequest{Username: username}
-
 	repo := h.app.Dao.Account()
-	account, err := repo.FindByUsername(ctx, req.Username)
+	createdAccount, err := repo.CreateAccount(ctx, account)
 	if err != nil {
 		httperror.InternalServerError(w, err)
-		return
+	}
+	accountDTO := dto.Account{
+		Username:    createdAccount.Username,
+		DisplayName: createdAccount.DisplayName,
+		CreateAt:    createdAccount.CreateAt,
+		Avatar:      createdAccount.Avatar,
+		Header:      createdAccount.Header,
+		Note:        createdAccount.Note,
 	}
 
+	res := AddResponse{accountDTO}
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(account); err != nil {
+	if err := json.NewEncoder(w).Encode(res); err != nil {
 		httperror.InternalServerError(w, err)
 		return
 	}
