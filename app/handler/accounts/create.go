@@ -2,24 +2,31 @@ package accounts
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 
+	"yatter-backend-go/app/domain/dto"
 	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/handler/httperror"
-
-	"github.com/go-chi/chi"
 )
 
 // Request body for `POST /v1/accounts`
-type AddRequest struct {
-	Username string
-	Password string
-}
+type (
+	AddRequest struct {
+		Username string
+		Password string
+	}
 
-type ReadRequest struct {
-	Username string
-}
+	AddResponse struct {
+		dto.Account
+	}
+
+	ReadRequest struct {
+		Username string
+	}
+	ReadResponse struct {
+		dto.Account
+	}
+)
 
 // Handle request for `POST /v1/accounts`
 func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
