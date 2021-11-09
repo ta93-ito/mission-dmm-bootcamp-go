@@ -2,9 +2,9 @@ package object
 
 type (
 	Status struct {
-		ID        int64 `json:"-"`
-		AccountID `json:"account_id,"`
+		ID        int64    `json:"id"`
+		AccountID int64    `json:"account_id" db:"account_id"`
 		Content   string   `json:"content"`
-		CreatedAt DateTime `json:"created_at"`
+		CreateAt  DateTime `json:"create_at" db:"create_at"`
 	}
 )

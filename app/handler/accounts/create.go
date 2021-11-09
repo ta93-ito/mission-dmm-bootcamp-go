@@ -4,15 +4,29 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"yatter-backend-go/app/domain/dto"
 	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/handler/httperror"
 )
 
 // Request body for `POST /v1/accounts`
-type AddRequest struct {
-	Username string
-	Password string
-}
+type (
+	AddRequest struct {
+		Username string
+		Password string
+	}
+
+  AddResponse struct {
+		dto.Account
+	}
+
+	ReadRequest struct {
+		Username string
+	}
+	ReadResponse struct {
+		dto.Account
+	}
+)
 
 // Handle request for `POST /v1/accounts`
 func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
@@ -31,14 +45,24 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	repo := h.app.Dao.Account() // domain/repository の取得
-	newAccount, err := repo.CreateAccount(ctx, account)
+	repo := h.app.Dao.Account()
+	createdAccount, err := repo.CreateAccount(ctx, account)
 	if err != nil {
 		httperror.InternalServerError(w, err)
 	}
+	accountDTO := dto.Account{
+		Username:    createdAccount.Username,
+		DisplayName: createdAccount.DisplayName,
+		CreateAt:    createdAccount.CreateAt,
+		Avatar:      createdAccount.Avatar,
+		Header:      createdAccount.Header,
+		Note:        createdAccount.Note,
+	}
 
+	res := AddResponse{accountDTO}
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(newAccount); err != nil {
+	if err := json.NewEncoder(w).Encode(res); err != nil {
 		httperror.InternalServerError(w, err)
+		return
 	}
 }

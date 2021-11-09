@@ -7,7 +7,7 @@ import (
 	"yatter-backend-go/app/app"
 	"yatter-backend-go/app/handler/accounts"
 	"yatter-backend-go/app/handler/health"
-	"yatter-backend-go/app/handler/statuses"
+	statuses "yatter-backend-go/app/handler/status"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"

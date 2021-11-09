@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"yatter-backend-go/app/domain/dto"
 	"yatter-backend-go/app/handler/httperror"
 
 	"github.com/go-chi/chi"
@@ -16,7 +17,6 @@ type ReadRequest struct {
 func (h *handler) Read(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	// requestパッケージを使用するようにする
 	username := chi.URLParam(r, "username")
 	if username == "" {
 		err := errors.New("username is required")
@@ -31,9 +31,18 @@ func (h *handler) Read(w http.ResponseWriter, r *http.Request) {
 		httperror.InternalServerError(w, err)
 		return
 	}
+	accountDTO := dto.Account{
+		Username:    account.Username,
+		DisplayName: account.DisplayName,
+		CreateAt:    account.CreateAt,
+		Avatar:      account.Avatar,
+		Header:      account.Header,
+		Note:        account.Note,
+	}
 
+	res := ReadResponse{accountDTO}
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(account); err != nil {
+	if err := json.NewEncoder(w).Encode(res); err != nil {
 		httperror.InternalServerError(w, err)
 		return
 	}
