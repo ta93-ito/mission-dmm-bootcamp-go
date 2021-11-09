@@ -10,6 +10,10 @@ import (
 	"github.com/go-chi/chi"
 )
 
+type ReadRequest struct {
+	Username string
+}
+
 func (h *handler) Read(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 

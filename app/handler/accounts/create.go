@@ -16,7 +16,7 @@ type (
 		Password string
 	}
 
-	AddResponse struct {
+  AddResponse struct {
 		dto.Account
 	}
 
