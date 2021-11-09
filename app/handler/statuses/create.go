@@ -35,11 +35,13 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	newStatus, err := h.app.Dao.Status().CreateStatus(ctx, status)
 	if err != nil {
 		httperror.InternalServerError(w, err)
+		return
 	}
 
 	account, err := h.app.Dao.Account().FindByID(ctx, status.AccountID)
 	if err != nil {
 		httperror.InternalServerError(w, err)
+		return
 	}
 
 	accountDTO := dto.Account{

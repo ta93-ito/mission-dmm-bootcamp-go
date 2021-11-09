@@ -26,7 +26,7 @@ const (
 )
 
 func (r *status) CreateStatus(ctx context.Context, newStatus *object.Status) (*object.Status, error) {
-	result, err := r.db.ExecContext(ctx, insert, newStatus.Content, newStatus.AccountID)
+	result, err := r.db.ExecContext(ctx, insertStatus, newStatus.Content, newStatus.AccountID)
 	if err != nil {
 		return nil, err
 	}
