@@ -22,6 +22,7 @@ func NewStatus(db *sqlx.DB) repository.Status {
 const (
 	readStatus   = "select * from status where id = ?"
 	insertStatus = "insert into status(content, account_id) values(?, ?)"
+	delete       = "delete from status where id = ?"
 )
 
 func (r *status) CreateStatus(ctx context.Context, newStatus *object.Status) (*object.Status, error) {
@@ -47,4 +48,12 @@ func (r *status) FindStatus(ctx context.Context, id int64) (*object.Status, erro
 		return nil, err
 	}
 	return status, nil
+}
+
+func (r *status) DeleteStatus(ctx context.Context, id int64) error {
+	_, err := r.db.ExecContext(ctx, delete, id)
+	if err != nil {
+		return err
+	}
+	return nil
 }

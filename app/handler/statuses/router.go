@@ -18,5 +18,6 @@ func NewRouter(app *app.App) http.Handler {
 	h := &handler{app: app}
 	r.Post("/", h.Create)
 	r.Get("/{id}", h.Read)
+	r.Delete("/{id}", h.Delete)
 	return r
 }
