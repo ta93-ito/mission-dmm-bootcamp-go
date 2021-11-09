@@ -2,6 +2,7 @@ package accounts
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"yatter-backend-go/app/domain/dto"
@@ -16,7 +17,7 @@ type (
 		Password string
 	}
 
-  AddResponse struct {
+	AddResponse struct {
 		dto.Account
 	}
 
@@ -50,6 +51,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		httperror.InternalServerError(w, err)
 	}
+	fmt.Println(createdAccount)
 	accountDTO := dto.Account{
 		Username:    createdAccount.Username,
 		DisplayName: createdAccount.DisplayName,

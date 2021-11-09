@@ -3,6 +3,7 @@ package statuses
 import (
 	"encoding/json"
 	"net/http"
+	"yatter-backend-go/app/domain/dto"
 	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/handler/httperror"
 )
@@ -14,9 +15,9 @@ type AddRequest struct {
 
 type AddResponse struct {
 	ID       int64           `json:"id"`
-	Account  object.Account  `json:"account"`
+	Account  dto.Account     `json:"account"`
 	Content  string          `json:"content"`
-	CreateAt object.DateTime `json:"created_at"`
+	CreateAt object.DateTime `json:"create_at"`
 }
 
 func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
@@ -30,22 +31,31 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	status := new(object.Status)
 	status.Content = req.Status
-	// accountとstatusの紐付けが不明なためハードコーディング
 	status.AccountID = 2
-	repo := h.app.Dao.Status()
-	newStatus, err := repo.CreateStatus(ctx, status)
+	newStatus, err := h.app.Dao.Status().CreateStatus(ctx, status)
 	if err != nil {
 		httperror.InternalServerError(w, err)
 	}
 
-	// accountとstatusの紐付けが不明なためハードコーディング
-	account, _ := h.app.Dao.Account().FindByUsername(ctx, "hoge")
+	account, err := h.app.Dao.Account().FindByID(ctx, status.AccountID)
+	if err != nil {
+		httperror.InternalServerError(w, err)
+	}
+
+	accountDTO := dto.Account{
+		Username:    account.Username,
+		DisplayName: account.DisplayName,
+		Avatar:      account.Avatar,
+		Header:      account.Header,
+		Note:        account.Note,
+		CreateAt:    account.CreateAt,
+	}
 
 	res := AddResponse{
 		ID:       newStatus.ID,
-		Account:  *account,
+		Account:  accountDTO,
 		Content:  newStatus.Content,
-		CreateAt: newStatus.CreatedAt,
+		CreateAt: newStatus.CreateAt,
 	}
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(res); err != nil {
