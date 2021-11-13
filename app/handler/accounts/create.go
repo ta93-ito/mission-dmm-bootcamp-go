@@ -20,13 +20,6 @@ type (
 	AddResponse struct {
 		dto.Account
 	}
-
-	ReadRequest struct {
-		Username string
-	}
-	ReadResponse struct {
-		dto.Account
-	}
 )
 
 // Handle request for `POST /v1/accounts`

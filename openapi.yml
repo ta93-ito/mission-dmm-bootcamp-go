@@ -148,7 +148,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Account"
-  "/accounts/{username}/follow":
+  "/accounts/{follower_name}/follow/{followee_name}":
     post:
       security:
       - Auth: []
@@ -158,9 +158,15 @@ paths:
       description: ""
       operationId: followAcount
       parameters:
-        - name: username
+        - name: follower_name
           in: path
           description: Username of account to follow
+          required: true
+          schema:
+            type: string
+        - name: followee_name
+          in: path
+          description: Username of account to be followed
           required: true
           schema:
             type: string

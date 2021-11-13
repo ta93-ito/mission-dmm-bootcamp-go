@@ -1,0 +1,4 @@
+development:
+  dialect: mysql
+  dir: migrations
+  datasource: yatter:yatter@tcp(mysql:3306)/yatter?loc=Asia%2FTokyo&parseTime=true

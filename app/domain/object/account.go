@@ -46,3 +46,7 @@ func generatePasswordHash(pass string) (PasswordHash, error) {
 	}
 	return PasswordHash(hash), nil
 }
+
+// func IsFollowed(followerName string) bool {
+
+// }

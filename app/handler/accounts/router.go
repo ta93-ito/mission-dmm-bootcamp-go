@@ -20,5 +20,7 @@ func NewRouter(app *app.App) http.Handler {
 	h := &handler{app: app}
 	r.Post("/", h.Create)
 	r.Get("/{username}", h.Read)
+	r.Post("/{follower_name}/follow/{followee_name}", h.Follow)
+	r.Get("/{username}/following", h.GetFollowings)
 	return r
 }
